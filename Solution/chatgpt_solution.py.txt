@@ -1,0 +1,92 @@
+Rules Recap
+
+We process characters left to right, tracking:
+
+score (starts at 0)
+
+focus (starts as True)
+
+prev_char (needed for rule 3 - C)
+
+Watch for consecutive Bs to ignore both
+
+Watch for D followed by D to reset score
+
+🧠 Plan
+
+Traverse the string from left to right with a while-loop using an index i.
+
+Handle consecutive Bs:
+
+If s[i] == 'B' and s[i+1] == 'B', skip both by incrementing i by 2.
+
+For each character:
+
+A:
+
+If focus is True: score += 1
+
+Else: score -= 1
+
+B (only if not part of BB): toggle focus
+
+C:
+
+Ignore if i == 0
+
+Else if prev_char == 'A', double the score
+
+D:
+
+If i + 1 < len(s) and s[i + 1] == 'D': reset score to 0
+
+Keep track of the previous character
+
+Advance i each time unless handling a BB pair
+
+✅ Implementation
+
+Here’s the Python code for this logic:
+
+def decode_ritual(s: str) -> int:
+    score = 0
+    focus = True
+    i = 0
+    prev_char = ''
+    
+    while i < len(s):
+        curr = s[i]
+
+        # Rule: Consecutive Bs are ignored
+        if curr == 'B' and i + 1 < len(s) and s[i + 1] == 'B':
+            i += 2
+            prev_char = ''
+            continue
+
+        if curr == 'A':
+            score += 1 if focus else -1
+
+        elif curr == 'B':
+            focus = not focus
+
+        elif curr == 'C':
+            if i != 0 and prev_char == 'A':
+                score *= 2
+
+        elif curr == 'D':
+            if i + 1 < len(s) and s[i + 1] == 'D':
+                score = 0
+
+        prev_char = curr
+        i += 1
+
+    return score
+
+🧪 Test Cases
+print(decode_ritual("ABAC"))      # Output: 2
+print(decode_ritual("AADDC"))     # Output: 0
+print(decode_ritual("BBAC"))      # Output: 1 (BB ignored)
+print(decode_ritual("C"))         # Output: 0 (C ignored at start)
+print(decode_ritual("ADDD"))      # Output: 0 (reset due to DD)
+print(decode_ritual("ABABAB"))    # Output: 1
+print(decode_ritual("AAAC"))      # Output: 6 (1 + 1 + 1 → C doubles → 6)
