@@ -1,0 +1,45 @@
+import pytest
+from user_solution import solve
+
+class TestEncryptedRitualDecoder:
+
+    def test_basic_focus_toggle(self):
+        assert solve("ABAC") == 2
+        # A (+1), B (toggle → False), A (-1), C (ignored)
+
+    def test_double_reset(self):
+        assert solve("AADDC") == 0
+        # A (+1), A (+1), D (next is D → reset), D (normal), C (ignored)
+
+    def test_consecutive_Bs_ignored(self):
+        assert solve("ABBAC") == 2
+        # A (+1), BB (ignored), A (+1), C (prev is A → double → 4)
+
+    def test_C_at_start_ignored(self):
+        assert solve("CAAB") == 1
+        # C (ignored), A (+1), A (+1), B (toggle)
+
+    def test_D_at_end_no_reset(self):
+        assert solve("AAD") == 2
+        # A (+1), A (+1), D (no next → normal)
+
+    def test_multiple_toggles(self):
+        assert solve("ABABABAA") == 0
+        # A (+1), B (False), A (-1), B (True), A (+1), B (False), A (-1), A (-1)
+
+    def test_edge_case_empty_string(self):
+        assert solve("") == 0
+        # No actions → score remains 0
+
+    def test_all_Cs(self):
+        assert solve("CCCC") == 0
+        # C at start ignored, rest have no A before → all ignored
+
+    def test_all_Ds(self):
+        assert solve("DDDD") == 0
+        # D + next D → reset, D + next D → reset again
+
+    def test_complex_mix(self):
+        assert solve("ABACDDABBCAC") == 4
+        # A (+1), B (False), A (-1), C (ignored), D + D → reset, D (normal),
+        # A (+1), B (True), B (ignored), C (prev not A → ignored), A (+1), C (prev A → double → 4)

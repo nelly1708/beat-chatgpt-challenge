@@ -1,0 +1,52 @@
+Title: Encrypted Ritual Decoder
+
+Description:
+You are given a string consisting of the characters A, B, C, and D. These represent ritual actions. The ritual must be decoded using the following rules:
+
+1. Start with a score of 0 and a state called "focus" set to True.
+2. Traverse the string from left to right.
+3. For each character:
+   - A: Add 1 to the score if focus is True, subtract 1 if False.
+   - B: Toggle the focus state.
+   - C: Double the current score, but only if the previous character was A.
+   - D: Reset score to 0, but only if the next character is also D.
+
+Additional Rules:
+- If two `B`s appear consecutively, ignore both.
+- If C appears at the start of the string, ignore it.
+- If D appears at the end of the string, treat it as a normal character (no reset).
+
+Input:
+A single string s (1 ≤ len(s) ≤ 1000) consisting only of characters A, B, C, and D.
+
+Output:
+An integer representing the final score after decoding the ritual.
+
+Examples:
+Input: "ABAC"
+Output: 2
+
+Explanation:
+- A → +1 (focus True)
+- B → toggle focus → False
+- A → -1 (focus False)
+- C → ignored (previous not A)
+
+Input: "AADDC"
+Output: 0
+
+Explanation:
+- A → +1
+- A → +1
+- D → next is D → reset to 0
+- D → normal
+- C → ignored (previous not A)
+
+Constraints:
+- The string contains only uppercase letters A–D.
+- The logic must be applied strictly in order.
+- Edge cases involving start/end positions and consecutive symbols must be handled carefully.
+
+Clarifications:
+- “Previous” and “next” refer to immediate neighbors.
+- Toggling focus means switching between True and False.

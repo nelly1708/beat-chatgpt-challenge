@@ -1,0 +1,46 @@
+def solve(s):
+    """
+    Decodes the ritual string based on custom rules.
+    Returns the final score as an integer.
+    """
+    score = 0
+    focus = True
+    i = 0
+    length = len(s)
+
+    while i < length:
+        current = s[i]
+        prev = s[i - 1] if i > 0 else None
+        next_char = s[i + 1] if i < length - 1 else None
+
+        # Rule: Ignore C at the start
+        if current == 'C' and i == 0:
+            i += 1
+            continue
+
+        # Rule: Ignore two consecutive Bs
+        if current == 'B' and next_char == 'B':
+            i += 2
+            continue
+
+        # Rule: A affects score based on focus
+        if current == 'A':
+            score += 1 if focus else -1
+
+        # Rule: B toggles focus
+        elif current == 'B':
+            focus = not focus
+
+        # Rule: C doubles score if previous was A
+        elif current == 'C':
+            if prev == 'A':
+                score *= 2
+
+        # Rule: D resets score if next is also D
+        elif current == 'D':
+            if next_char == 'D':
+                score = 0
+
+        i += 1
+
+    return score
